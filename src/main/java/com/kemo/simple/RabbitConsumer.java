@@ -29,6 +29,7 @@ public class RabbitConsumer {
         };
 
         Connection connection = factory.newConnection(addresses);
+        // 多消费者时，创建多个channel，一个channel对应一个消费者。
         final Channel channel = connection.createChannel();
         // 设置客户端最多接收未被 ack 的消息的个数
         channel.basicQos(10);
