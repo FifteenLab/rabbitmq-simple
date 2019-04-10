@@ -1,6 +1,7 @@
 package com.kemo.simple;
 
 import com.alibaba.fastjson.JSONObject;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -52,7 +53,10 @@ public class DelayMessageProducer {
         JSONObject message = new JSONObject();
         message.put("time", System.currentTimeMillis());
         message.put("content", "hello world!!!");
-        channel.basicPublish(EXCHANGE, ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN, message.toJSONString().getBytes());
+
+        // 消息指定有效期
+        channel.basicPublish(EXCHANGE, ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN
+                .builder().expiration("6000").build(), message.toJSONString().getBytes());
 
         channel.close();
         connection.close();
